@@ -1,0 +1,58 @@
+авторизация
+
+ <Grid>
+        <Label x:Name="zag_autho" FontSize="20" Content="Авторизация в системе" HorizontalAlignment="Center" Margin="0,88,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="loginTextBox" HorizontalAlignment="Left" Height="35" Margin="86,144,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="156"/>
+        <PasswordBox x:Name="passwordTextBox" HorizontalAlignment="Center" Margin="86,200,102,0" VerticalAlignment="Top" Width="156" Height="35"/>
+        <Button x:Name="butto_auth" Content="Войти в систему" HorizontalAlignment="Center" Margin="108,278,107,0" VerticalAlignment="Top" Width="110" Height="29" Click="Button_auth_Click"/>
+    </Grid>
+
+авториз прогр
+
+ public partial class MainWindow : Window
+    {
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+
+        private void Button_auth_Click(object sender, RoutedEventArgs e)
+        {
+            if (!String.IsNullOrEmpty(loginTextBox.Text))
+            {
+                if (!String.IsNullOrEmpty(passwordTextBox.Password))
+                {
+                    IQueryable<Владельцы> владельцы_list = Entities.GetContext().Владельцы.Where(p => p.Логин == loginTextBox.Text && p.Пароль == passwordTextBox.Password);
+                    if (владельцы_list.Count() == 1)
+                    {
+                        MessageBox.Show("Добро пожаловать, " + владельцы_list.First().Имя);
+                    Window1 window = new Window1(владельцы_list.First());
+                    window.Owner = this;
+                    window.Show();
+                    this.Hide();
+                }
+                else MessageBox.Show("Неверный пароль или логин!");
+                }
+            }
+        }
+    }
+
+}
+
+
+
+для бд
+
+    public partial class Entities : DbContext
+    {
+        private static Entities _context;
+        public Entities()
+            : base("name=Entities")
+        {
+        }
+        public static Entities GetContext()
+        {
+            if (_context == null)
+                _context = new Entities();
+            return _context;
+        }
