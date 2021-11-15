@@ -113,3 +113,64 @@
         <Setter Property="FontFamily" Value="Segoe UI"></Setter>
     </Style>
 </ResourceDictionary>
+
+
+окно
+ <Grid>
+        <Image x:Name="Image_profiel" Source="Y:\Student\18ИП1,2\ПМ.02 УП.02\Кязимова\11ПР\local_image\IMG.jpg" HorizontalAlignment="Left" Height="100" Margin="563,10,0,0" VerticalAlignment="Top" Width="100"/>
+        <Label x:Name="famili_label" Content="Фамилия" HorizontalAlignment="Left" Margin="668,10,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="name_label" Content="Имя" HorizontalAlignment="Left" Margin="668,41,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="exit_button" Content="Выйти" HorizontalAlignment="Left" Margin="684,72,0,0" VerticalAlignment="Top" Width="75" Click="Exit_button_Click"/>
+    </Grid>
+    
+    
+    
+    код окна 
+     public partial class Window1 : Window
+    {
+        private Владельцы владельцы;
+        public Window1(Владельцы владельцы)
+        {
+            InitializeComponent();
+            this.владельцы = владельцы;
+            famili_label.Content = владельцы.Фамилия;
+            name_label.Content = владельцы.Имя;
+            if (!String.IsNullOrEmpty(владельцы.картинка))
+            {
+                try
+                {
+                    Image_profiel.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("image/" + владельцы.картинка)));
+                }
+                catch(InvalidOperationException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
+        private void Exit_button_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+        private void Window_Clossing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            this.Owner.Show();
+        }
+    }
+    
+    
+    
+    
+    ред
+     <Grid>
+        <Image x:Name="image_shop" Source="local_image/no_image.png" HorizontalAlignment="Left" Height="132" Margin="10,10,0,0" VerticalAlignment="Top" Width="132"/>
+        <TextBlock x:Name="name_shops_textBlock" HorizontalAlignment="Left" Height="34" Margin="147,10,0,0" TextWrapping="Wrap" Text="Название магазина" VerticalAlignment="Top" Width="222" FontWeight="Bold"/>
+        <TextBlock x:Name="id_shop_texrBlock" Text="код магазина- " HorizontalAlignment="Left" Margin="147,48,0,0" VerticalAlignment="Top" Foreground="Aqua"/>
+    </Grid>
+    
+    
+    ред код
+    
+
+
+
