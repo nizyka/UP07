@@ -230,7 +230,7 @@
 
     public partial class Window1 : Window
     {
-        private Dispetsher dispetsher;
+          private Dispetsher dispetsher;
         public Window1(Dispetsher dispetsher)
         {
             InitializeComponent();
@@ -242,9 +242,14 @@
                          join driv in Entities.GetContext().Driver on zakaz.ID_dri equals driv.ID_dri
                          select new
                          {
-
-                         }
-        }    
+                             id = zakaz.ID,
+                             data = zakaz.Data_prin_zak,
+                             name = client.Name.ToString() + " " + client.Surname + " " + client.Patronymic,
+                             val = zakaz.Volume,
+                             sum = zakaz.Sum
+                         };
+            dataGrid.ItemsSource = massiv.ToList();
+        }
         private void Exit_button_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
