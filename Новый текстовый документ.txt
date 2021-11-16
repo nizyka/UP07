@@ -236,7 +236,14 @@
             InitializeComponent();
             this.dispetsher = dispetsher;
             famili_label.Content = dispetsher.Name;
-            name_label.Content = dispetsher.Surname;          
+            name_label.Content = dispetsher.Surname;
+            var massiv = from zakaz in Entities.GetContext().Zakazi
+                         join client in Entities.GetContext().Klient on zakaz.ID_kli equals client.ID_kli
+                         join driv in Entities.GetContext().Driver on zakaz.ID_dri equals driv.ID_dri
+                         select new
+                         {
+
+                         }
         }    
         private void Exit_button_Click(object sender, RoutedEventArgs e)
         {
