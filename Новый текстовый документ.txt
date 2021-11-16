@@ -222,3 +222,69 @@
 
 
 
+
+
+
+
+
+
+    public partial class Window1 : Window
+    {
+        private Dispetsher dispetsher;
+        public Window1(Dispetsher dispetsher)
+        {
+            InitializeComponent();
+            this.dispetsher = dispetsher;
+            famili_label.Content = dispetsher.Name;
+            name_label.Content = dispetsher.Surname;          
+        }    
+        private void Exit_button_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+        private void Window_Clossing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            this.Owner.Show();
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+    public partial class MainWindow : Window
+    {
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+
+            private void Button_auth_Click(object sender, RoutedEventArgs e)
+            {
+                if (!String.IsNullOrEmpty(loginTextBox.Text))
+                {
+                    if (!String.IsNullOrEmpty(password.Password))
+                    {
+                        IQueryable<Dispetsher> dispetsher_list = Entities.GetContext().Dispetsher.Where(p => p.Surname == loginTextBox.Text && p.Passvord == password.Password);
+                        if (dispetsher_list.Count() == 1)
+                       {
+                        Window1 window = new Window1(dispetsher_list.First());
+                        window.Owner = this;
+                        window.Show();
+                        this.Hide();
+                    }
+                    else MessageBox.Show("Неверный пароль или логин!");
+                    }
+                }
+
+
+
+            }       
+    }
+}
