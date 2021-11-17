@@ -300,3 +300,17 @@
             }       
     }
 }
+
+
+
+
+
+двойной клик
+
+<DataGridTemplateColumn Header="№ заявки">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Label Tag="{Binding mdb}" MouseDoubleClick="Label_MouseDoubleClock" Content="{Binding mdbName}"></Label>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
