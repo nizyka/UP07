@@ -263,6 +263,43 @@
 
 
 
+  private int pId;
+        public ProductWin(object id)
+        {
+            InitializeComponent();
+
+            var pId = (int)id;
+            var prod = Entities.GetContext().Product.Where(p => p.ID == pId);
+           Type.Text +=  prod.First().ProductType.Title;
+            NameProd.Text +=  prod.First().Title;
+            Art.Text += prod.First().ArticleNumber;
+           Kol.Text +=  prod.First().ProductionPersonCount.ToString();
+            Ceh.Text += prod.First().ProductionWorkshopNumber.ToString();
+            Sum.Text += prod.First().MinCostForAgent.ToString();
+            Opisan.Text +=  prod.First().Description;
+        }
+    }
+    
+    
+    
+    
+    
+    
+        <Grid>
+        <Image x:Name="image" HorizontalAlignment="Left" Height="160" Margin="428,119,0,0" VerticalAlignment="Top" Width="163" Source="Resource/Images/picture.png"/>
+        <TextBlock x:Name="Type"  HorizontalAlignment="Left" Margin="21,60,0,0" Text="Тип продукта" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+        <TextBlock x:Name="NameProd"  HorizontalAlignment="Left" Margin="21,100,0,0"  TextWrapping="Wrap" Text="Наименование продукта" VerticalAlignment="Top"/>
+        <TextBlock x:Name="Art"  HorizontalAlignment="Left" Margin="21,140,0,0" Text="Артикул" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+        <TextBlock x:Name="Opisan"  HorizontalAlignment="Left" Margin="21,180,0,0" Text="Описание" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+        <TextBlock x:Name="Kol"  HorizontalAlignment="Left" Margin="21,220,0,0" Text="Количество" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+        <TextBlock x:Name="Ceh"  HorizontalAlignment="Left" Margin="21,260,0,0" Text="Номер цеха" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+        <TextBlock x:Name="Sum"  HorizontalAlignment="Left" Margin="21,300,0,0" Text="Минимальная стоимость" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+        <Label x:Name="label" Content="Информация о продукте" HorizontalAlignment="Left" Margin="216,10,0,0" VerticalAlignment="Top" Height="30" Width="213"/>
+    </Grid>
+</Window>
+
+
+
 
 
 
