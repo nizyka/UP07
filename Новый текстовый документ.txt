@@ -224,6 +224,44 @@
 
 
 
+ <Grid>
+        <DataGrid x:Name="dataGridProd" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="244" Margin="72,165,0,0" VerticalAlignment="Top" Width="688">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Тип продукта" Binding="{Binding type}"/>
+                <DataGridTemplateColumn Header="Наименование продукта">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Label Tag="{Binding prod}" MouseDoubleClick="Label_MouseDoubleClick"
+                                   Content="{Binding name}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Артикул" Binding="{Binding art}"/>
+                <DataGridTextColumn Header="Материалы" Binding="{Binding mater}"/>
+                <DataGridTextColumn Header="Стоимость" Binding="{Binding sto}"/>
+                <DataGridTemplateColumn Width="auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Tag="{Binding edB}" Content="Редактировать" Click="Button_Click"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Image x:Name="image" HorizontalAlignment="Left" Height="100" Margin="36,10,0,0" VerticalAlignment="Top" Width="100" Source="Resource/Images/Намордник.png"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="227,96,0,0" TextWrapping="Wrap" Text="Поиск" VerticalAlignment="Top" Width="248"/>
+        <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Margin="592,96,0,0" VerticalAlignment="Top" Width="168"/>
+        <ComboBox x:Name="comboBox1" HorizontalAlignment="Left" Margin="812,97,0,0" VerticalAlignment="Top" Width="178"/>
+        <Button x:Name="button" Content="Добавить" HorizontalAlignment="Left" Margin="36,588,0,0" VerticalAlignment="Top" Width="74"/>
+
+    </Grid>
+
+
+
+
+
+
+
 
 
 
