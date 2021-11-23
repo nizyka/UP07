@@ -1,0 +1,121 @@
+ public partial class Window1  Window
+    {
+        private Dispetsher dispetsher;
+        public Window1(Dispetsher dispetsher)
+        {
+            InitializeComponent();
+            this.dispetsher = dispetsher;
+            famili_label.Content = dispetsher.Name;
+            name_label.Content = dispetsher.Surname;
+            if (!String.IsNullOrEmpty(dispetsher.Image))
+                try
+                {
+                    Image_profiel.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(image + dispetsher.Image)));
+                }
+                catch (InvalidOperationException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+             var massiv = from zakaz in Entities.GetContext().Zakazi
+                         join client in Entities.GetContext().Klient on zakaz.ID_kli equals client.ID_kli
+                         join driv in Entities.GetContext().Driver on zakaz.ID_dri equals driv.ID_dri
+                         select new
+                         {
+                             za = zakaz.ID,
+                             date = zakaz.Data_prin_zak,
+                             name = client.Name.ToString() +   + client.Surname +   + client.Patronymic,
+                             valy = zakaz.Volume.ToString() +  тон,
+                             sum = zakaz.Sum.ToString() + руб.,
+                             statys = zakaz.Status
+                            
+                         };
+            dataGrid.ItemsSource = massiv.ToList();
+
+        }
+
+
+        private void Exit_button_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+        private void Window_Clossing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            this.Owner.Show();
+        }
+
+        private void Label_MouseDoubleClocked(object sender, MouseButtonEventArgs e)
+        {
+            Label label = sender as Label;
+            Info info = new Info(label.Tag);
+            info.Owner = this;
+            info.Show();
+        }
+
+        private void dell_button(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult messageBoxResult = MessageBox.Show(Вы действительно хотите удалить запись, Удаление записи..., MessageBoxButton.YesNo);
+            if (messageBoxResult == MessageBoxResult.Yes)
+            {
+                int id = (int)TypeDescriptor.GetProperties(dataGrid.SelectedItem)[0].GetValue(dataGrid.SelectedItem);
+                Zakazi zakazi = Entities.GetContext().Zakazi.Where(prop = prop.ID == id).First();
+                Entities.GetContext().Zakazi.Remove(zakazi);
+                Entities.GetContext().SaveChanges();
+                UpdateData();
+            }
+        }
+
+        private void UpdateData()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Red_click(object sender, RoutedEventArgs e)
+        {
+            Edit edit = new Edit();
+            edit.Owner = this.Owner;
+            edit.Show();
+        }
+
+        private void change_button(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = Image Files.png; .jpg; .jpeg;
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    File.Copy(openFileDialog.FileName, image + System.IO.Path.GetFileName(openFileDialog.FileName), true);
+                    dispetsher.Image = System.IO.Path.GetFileName(openFileDialog.FileName);
+                    Entities.GetContext().SaveChanges();
+                    Entities.GetContext().ChangeTracker.Entries().ToList().ForEach(p = p.Reload());
+                    try
+                    {
+                        Image_profiel.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(image + dispetsher.Image)));
+                    }
+                    catch(IOException ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+
+                }
+                catch (IOException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+
+
+
+            } 
+
+        }
+
+        private void add_button(object sender, RoutedEventArgs e)
+        {
+           Add add = new Add();
+           add.Owner = this.Owner;
+           add.Show();
+        }
+
+        
+    }
+}
