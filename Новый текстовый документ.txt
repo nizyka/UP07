@@ -1,3 +1,19 @@
+ MessageBoxResult messageBoxResult = MessageBox.Show("Вы действительно хотите удалить запись?", "Удаление записи...", MessageBoxButton.YesNo);
+            if (messageBoxResult==MessageBoxResult.Yes)
+            {
+                int id = (int)TypeDescriptor.GetContext().Zakazi.Where(p => p.ID == id).First();
+                Entities.GetContext().Zakazi.Remove(zakazi);
+                Entities.GetContext().SaveChanges();
+                UpdateData();
+
+
+
+
+
+
+
+
+
 авторизация
 
  <Grid>
