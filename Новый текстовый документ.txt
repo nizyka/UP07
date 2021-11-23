@@ -1,3 +1,28 @@
+private void change_button(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image Files|*.png;*";
+            if (openFileDialog.ShowDialog()==true)
+            {
+                try
+                {
+                    File.Copy(openFileDialog.FileName, "image/" +System.IO.Path.GetFileName(openFileDialog.FileName), true);
+
+
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
 private void LoginBut_Click(object sender, RoutedEventArgs e)
         {
             if(!String.IsNullOrEmpty(LoginTxB.Text))
