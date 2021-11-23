@@ -1,3 +1,45 @@
+ <Grid>
+        <Label x:Name="date" Content="Дата принятия заказа" HorizontalAlignment="Left" Margin="48,116,0,0" VerticalAlignment="Top" Height="30" Width="186" FontSize="16"/>
+        <Label x:Name="val" Content="Объем груза" HorizontalAlignment="Left" Margin="48,189,0,0" VerticalAlignment="Top" Height="30" Width="134" FontSize="16"/>
+        <Label x:Name="sum" Content="Сумма заказа" HorizontalAlignment="Left" Margin="48,256,0,0" VerticalAlignment="Top" Height="30" Width="134" FontSize="16"/>
+        <Label x:Name="edit" Content="Редактирование заказа" HorizontalAlignment="Left" Margin="180,24,0,0" VerticalAlignment="Top" FontSize="18" FontWeight="Bold"/>
+        <ComboBox x:Name="val_box" HorizontalAlignment="Left" Margin="264,189,0,0" VerticalAlignment="Top" Width="248" Height="30" FontSize="16"/>
+        <DatePicker HorizontalAlignment="Left" Margin="264,116,0,0" VerticalAlignment="Top" Height="50" Width="248" FontSize="16"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="30" Margin="264,256,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="248" FontSize="16"/>
+        <Button x:Name="save" Content="Сохранить" HorizontalAlignment="Left" Margin="218,356,0,0" VerticalAlignment="Top" Width="75" FontSize="14"/>
+
+    </Grid>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  public partial class Window1  Window
     {
         private Dispetsher dispetsher;
