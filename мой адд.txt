@@ -1,0 +1,237 @@
+Редактирование 
+<Grid>
+        <Label x:Name="date" Content="Дата принятия заказа" HorizontalAlignment="Left" Margin="48,116,0,0" VerticalAlignment="Top" Height="30" Width="186" FontSize="16"/>
+        <Label x:Name="sum" Content="Сумма заказа" HorizontalAlignment="Left" Margin="48,290,0,0" VerticalAlignment="Top" Height="30" Width="134" FontSize="16"/>
+        <Label x:Name="edit" Content="Редактирование заказа" HorizontalAlignment="Left" Margin="180,24,0,0" VerticalAlignment="Top" FontSize="18" FontWeight="Bold"/>
+        <DatePicker HorizontalAlignment="Left" Text="{Binding Data_prin_zak}" Margin="264,116,0,0" VerticalAlignment="Top" Height="50" Width="248" FontSize="16"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="30" Margin="264,290,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="248" FontSize="16"/>
+        <Button x:Name="save" Content="Сохранить" HorizontalAlignment="Left" Margin="218,356,0,0" VerticalAlignment="Top" Width="75" FontSize="14" Click="Save_Click"/>
+        <Label x:Name="statys" Content="Статус" HorizontalAlignment="Left" Margin="48,241,0,0" VerticalAlignment="Top" Height="30" Width="134" FontSize="16"/>
+        <ComboBox x:Name="statys_box" SelectedItem="{Binding Statys}" DisplayMemberPath="info" HorizontalAlignment="Left" Margin="264,237,0,0" VerticalAlignment="Top" Width="248" Height="30" FontSize="16"/>
+
+    </Grid>
+
+код
+ public partial class Edit : Window
+    {
+        public Edit(Zakazi zakazi)
+        {
+            InitializeComponent();
+            DataContext = zakazi;
+            statys_box.ItemsSource = Entities.GetContext().Zakazi.ToList();
+
+
+        }
+
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+
+           Entities.GetContext().SaveChanges();
+            ((Window1)this.Owner).UpdateData();
+            MessageBox.Show("Информация успешно сохранена");
+            this.Close();
+
+
+        }
+    }
+
+
+
+
+ОСНОВА
+ public partial class Window1 : Window
+    {
+        private Dispetsher dispetsher;
+        public Window1(Dispetsher dispetsher)
+        {
+            InitializeComponent();
+            this.dispetsher = dispetsher;
+            famili_label.Content = dispetsher.Name;
+            name_label.Content = dispetsher.Surname;
+            if (!String.IsNullOrEmpty(dispetsher.Image))
+                try
+                {
+                    Image_profiel.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("image/" + dispetsher.Image)));
+                }
+                catch (InvalidOperationException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+
+
+            UpdateData();
+            //Entities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+            // var massiv = from zakaz in Entities.GetContext().Zakazi
+            //             join client in Entities.GetContext().Klient on zakaz.ID_kli equals client.ID_kli
+            //             join driv in Entities.GetContext().Driver on zakaz.ID_dri equals driv.ID_dri
+            //             select new
+            //             {
+            //                 za = zakaz.ID,
+            //                 date = zakaz.Data_prin_zak,
+            //                 name = client.Name.ToString() + " " + client.Surname + " " + client.Patronymic,
+            //                 valy = zakaz.Volume.ToString() + " тон",
+            //                 sum = zakaz.Sum.ToString() + "руб.",
+            //                 statys = zakaz.Status
+
+            //             };
+            //dataGrid.ItemsSource = massiv.ToList();
+
+        }
+
+
+        private void Exit_button_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+        private void Window_Clossing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            this.Owner.Show();
+        }
+
+        private void Label_MouseDoubleClocked(object sender, MouseButtonEventArgs e)
+        {
+            Label label = sender as Label;
+            Info info = new Info(label.Tag);
+            info.Owner = this;
+            info.Show();
+        }
+
+       
+
+        private void dell_button(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult messageBoxResult = MessageBox.Show("Вы действительно хотите удалить запись?", "Удаление записи...", MessageBoxButton.YesNo);
+            if (messageBoxResult == MessageBoxResult.Yes)
+            {
+                int id = (int)TypeDescriptor.GetProperties(dataGrid.SelectedItem)[0].GetValue(dataGrid.SelectedItem);
+                Zakazi zakazi = Entities.GetContext().Zakazi.Where(prop => prop.ID == id).First();
+                Entities.GetContext().Zakazi.Remove(zakazi);
+                Entities.GetContext().SaveChanges();
+                UpdateData();
+            }
+        }
+
+        public void UpdateData()
+        {
+            Entities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+            var massiv = from zakaz in Entities.GetContext().Zakazi
+                         join client in Entities.GetContext().Klient on zakaz.ID_kli equals client.ID_kli
+                         join driv in Entities.GetContext().Driver on zakaz.ID_dri equals driv.ID_dri
+                         select new
+                         {
+                             za = zakaz.ID,
+                             date = zakaz.Data_prin_zak,
+                             name = client.Name.ToString() + " " + client.Surname + " " + client.Patronymic,
+                             valy = zakaz.Volume.ToString() + " тон",
+                             sum = zakaz.Sum.ToString() + "руб.",
+                             statys = zakaz.Status
+
+                         };
+            dataGrid.ItemsSource = massiv.ToList();
+        }
+
+        private void Red_click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            Edit edit = new Edit((Zakazi)button.Tag);
+            edit.Owner = this;
+            edit.Show();
+        }
+
+        private void change_button(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image Files|*.png;* .jpg;* .jpeg";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    File.Copy(openFileDialog.FileName, "image/" + System.IO.Path.GetFileName(openFileDialog.FileName), true);
+                    dispetsher.Image = System.IO.Path.GetFileName(openFileDialog.FileName);
+                    Entities.GetContext().SaveChanges();
+                    Entities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+                    try
+                    {
+                        Image_profiel.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("image/" + dispetsher.Image)));
+                    }
+                    catch(IOException ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+
+                }
+                catch (IOException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+
+
+
+            } 
+
+        }
+
+        private void add_button(object sender, RoutedEventArgs e)
+        {
+           Add add = new Add();
+           add.Owner = this.Owner;
+           add.Show();
+        }
+
+
+        private void Cli_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Client cli = new Client();
+            cli.Owner = this.Owner;
+            cli.Show();
+        }
+    }
+}
+
+
+
+основа
+ <Grid Margin="0,0,0,5">
+        <Image x:Name="Image_profiel" Source="Resources\Images\unnamed.jpg" HorizontalAlignment="Left" Height="100" Margin="32,10,0,0" VerticalAlignment="Top" Width="100"/>
+        <Label x:Name="famili_label" Content="Фамилия" HorizontalAlignment="Left" Margin="137,10,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="name_label" Content="Имя" HorizontalAlignment="Left" Margin="137,41,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="exit_button" Content="Выйти" HorizontalAlignment="Left" Margin="137,81,0,0" VerticalAlignment="Top" Width="108" Click="Exit_button_Click" Height="29"/>
+        <DataGrid AutoGenerateColumns="false" x:Name="dataGrid" HorizontalAlignment="Left" Height="194" Margin="10,176,0,0" VerticalAlignment="Top" Width="920" >
+            <DataGrid.Columns>
+
+                <DataGridTemplateColumn Header="№ заказа">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Label Tag="{Binding za}" MouseDoubleClick="Label_MouseDoubleClocked" Content="{Binding za}"></Label>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Клиент" Binding="{Binding name}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Дата принятия заказа" Binding="{Binding date}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Объем заказа" Binding="{Binding valy}"></DataGridTextColumn>
+                <DataGridTemplateColumn Header="Заказчик">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Label Tag="{Binding name}" MouseDoubleClick="Label_MouseDoubleClocked" Content="{Binding name}"></Label>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Статус" Binding="{Binding statys}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Сумма заказа" Binding="{Binding sum}"></DataGridTextColumn>
+
+                <DataGridTemplateColumn Width ="auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button  Content="Редактировать" Click="Red_click"></Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button x:Name="dell" Content="Удалить" HorizontalAlignment="Left" Margin="12,410,0,0" VerticalAlignment="Top" Width="108" Click="dell_button" Height="29"/>
+        <Button x:Name="add" Content="Добавить" HorizontalAlignment="Left" Margin="176,410,0,0" VerticalAlignment="Top" Width="108" Click="add_button" Height="29"/>
+        <Button x:Name="change" Content="Сменить фото" HorizontalAlignment="Left" Margin="137,127,0,0" VerticalAlignment="Top" Width="108" Click="change_button" Height="29"/>
+        <Button x:Name="kli" Content="Клиенты" HorizontalAlignment="Left" Margin="792,410,0,0" VerticalAlignment="Top" Width="76" Height="29" Click="Cli_Button_Click"/>
+    </Grid>
+
+
